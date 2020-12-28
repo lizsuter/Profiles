@@ -3,12 +3,214 @@ title: "Oceanographic Profiles for Cariaco Chemoautotrophy Paper"
 output: html_notebook
 ---
 
+Load libraries
 ```{r}
 library(oce)
-library(dplyr)
+library(ocedata)
 library(tidyverse)
 library(readxl)
 library(cowplot)
 library(gridGraphics)
 ```
 
+
+## Load in and check CTD data. Do some QC of oxygen profiles
+
+CAR212_2 (Leg 2 [Omics cruise] of Cariaco-212)
+```{r}
+## C212_2 cast 1
+
+# Load in with oce package
+C212_2_1 <- read.oce("CTD_data/C212_2_1.cnv")
+# Trim the file to only the downcast
+C212_2_1_dc <- ctdTrim(C212_2_1)
+# Plot full profile
+plot(C212_2_1_dc)
+# Plot only oxygen
+plotProfile(C212_2_1_dc, ytype = "depth", "oxygen5")
+# Correct DO by sensor offset
+C212_2_1_dc[["oxygen5"]] <- C212_2_1_dc[["oxygen5"]]-0.3 #I had previously determined these offsets by taking the average DO concentration below the chemocline (where conditions are sulfidic and DO is confidently zero). Check "C212_2_ctd_cor.xlsx" for details.
+# Plot again
+plotProfile(C212_2_1_dc, ytype = "depth", "oxygen5") 
+
+## C212_2 cast 2
+
+# Load in with oce package
+C212_2_2 <- read.oce("CTD_data/C212_2_2.cnv")
+# Trim the file to only the downcast
+C212_2_2_dc <- ctdTrim(C212_2_2)
+# Plot full profile
+plot(C212_2_2_dc)
+# Plot only oxygen
+plotProfile(C212_2_2_dc, ytype = "depth", "oxygen5")
+# Correct DO by sensor offset
+C212_2_2_dc[["oxygen5"]] <- C212_2_2_dc[["oxygen5"]]-0.34
+# Plot again
+plotProfile(C212_2_2_dc, ytype = "depth", "oxygen5") 
+
+## C212_2 cast 3
+
+# Load in with oce package
+C212_2_3 <- read.oce("CTD_data/C212_2_3.cnv")
+# Trim the file to only the downcast
+C212_2_3_dc <- ctdTrim(C212_2_3)
+# Plot full profile
+plot(C212_2_3_dc)
+# Plot only oxygen
+plotProfile(C212_2_3_dc, ytype = "depth", "oxygen5") 
+# Correct DO by sensor offset
+C212_2_3_dc[["oxygen5"]] <- C212_2_3_dc[["oxygen5"]]-0.31
+# Plot again
+plotProfile(C212_2_3_dc, ytype = "depth", "oxygen5") 
+
+## C212_2 cast 4
+
+# Load in with oce package
+C212_2_4 <- read.oce("CTD_data/C212_2_4.cnv")
+# Trim the file to only the downcast
+C212_2_4_dc <- ctdTrim(C212_2_4)
+# Plot full profile
+plot(C212_2_4_dc)
+# Plot only oxygen
+plotProfile(C212_2_4_dc, ytype = "depth", "oxygen5") 
+# Correct DO by sensor offset
+C212_2_4_dc[["oxygen5"]] <- C212_2_4_dc[["oxygen5"]]-0.31
+# Plot again
+plotProfile(C212_2_4_dc, ytype = "depth", "oxygen5") 
+
+# Plot  oxygen data from all casts on same plot
+plotProfile(C212_2_1_dc, ytype = "depth", "oxygen5")
+lines(C212_2_2_dc[["oxygen5"]], C212_2_2_dc[["depth"]], col = "red")
+lines(C212_2_3_dc[["oxygen5"]], C212_2_3_dc[["depth"]], col = "blue")
+lines(C212_2_4_dc[["oxygen5"]], C212_2_4_dc[["depth"]], col = "green")
+```
+
+
+
+CAR216_2 (Leg 2 [Omics cruise] of Cariaco-216)
+```{r}
+## C216_2 cast 1
+
+# Load in with oce package
+C216_2_1 <- read.oce("CTD_data/C216_2_1.cnv")
+# Trim the file to only the downcast
+C216_2_1_dc <- ctdTrim(C216_2_1)
+# Plot full profile
+plot(C216_2_1_dc)
+# Plot only oxygen
+plotProfile(C216_2_1_dc, ytype = "depth", "oxygen5")
+# Correct DO by sensor offset
+C216_2_1_dc[["oxygen5"]] <- C216_2_1_dc[["oxygen5"]]-2.28 #I had previously determined these offsets by taking the average DO concentration below the chemocline (where conditions are sulfidic and DO is confidently zero). Check "C216_2_ctd_cor.xlsx" for details.
+# Plot again
+plotProfile(C216_2_1_dc, ytype = "depth", "oxygen5") 
+
+## C216_2 cast 2
+
+# Load in with oce package
+C216_2_2 <- read.oce("CTD_data/C216_2_2.cnv")
+# Trim the file to only the downcast
+C216_2_2_dc <- ctdTrim(C216_2_2)
+# Plot full profile
+plot(C216_2_2_dc)
+# Plot only oxygen
+plotProfile(C216_2_2_dc, ytype = "depth", "oxygen5")
+# Correct DO by sensor offset
+C216_2_2_dc[["oxygen5"]] <- C216_2_2_dc[["oxygen5"]]-2.3
+# Plot again
+plotProfile(C216_2_2_dc, ytype = "depth", "oxygen5") 
+
+## C216_2 cast 3
+
+# Load in with oce package
+C216_2_3 <- read.oce("CTD_data/C216_2_3.cnv")
+# Trim the file to only the downcast
+C216_2_3_dc <- ctdTrim(C216_2_3)
+# Plot full profile
+plot(C216_2_3_dc)
+# Plot only oxygen
+plotProfile(C216_2_3_dc, ytype = "depth", "oxygen5") 
+# Correct DO by sensor offset
+C216_2_3_dc[["oxygen5"]] <- C216_2_3_dc[["oxygen5"]]-2.29
+# Plot again
+plotProfile(C216_2_3_dc, ytype = "depth", "oxygen5") 
+
+## C216_2 cast 4
+
+# Load in with oce package
+C216_2_4 <- read.oce("CTD_data/C216_2_4.cnv")
+# Trim the file to only the downcast
+C216_2_4_dc <- ctdTrim(C216_2_4)
+# Plot full profile
+plot(C216_2_4_dc)
+# Plot only oxygen
+plotProfile(C216_2_4_dc, ytype = "depth", "oxygen5") 
+# Correct DO by sensor offset
+C216_2_4_dc[["oxygen5"]] <- C216_2_4_dc[["oxygen5"]]-2.29
+# Plot again
+plotProfile(C216_2_4_dc, ytype = "depth", "oxygen5") 
+
+# Plot  oxygen data from all casts on same plot
+plotProfile(C216_2_1_dc, ytype = "depth", "oxygen5")
+lines(C216_2_2_dc[["oxygen5"]], C216_2_2_dc[["depth"]], col = "red")
+lines(C216_2_3_dc[["oxygen5"]], C216_2_3_dc[["depth"]], col = "blue")
+lines(C216_2_4_dc[["oxygen5"]], C216_2_4_dc[["depth"]], col = "green")
+```
+
+
+
+CAR224_2 (Leg 2 [SBU cruise] of Cariaco-224)
+```{r}
+## C224_2 cast 1
+
+# Load in with oce package
+C224_1 <- read.oce("CTD_data/C224_1.cnv")
+# Trim the file to only the downcast
+C224_1_dc <- ctdTrim(C224_1)
+# Plot full profile
+plot(C224_1_dc)
+# Plot only oxygen
+plotProfile(C224_1_dc, ytype = "depth", "oxygen6")
+# Correct DO by sensor offset
+C224_1_dc[["oxygen6"]] <- C224_1_dc[["oxygen6"]]-3.53 #I had previously determined these offsets by taking the average DO concentration below the chemocline (where conditions are sulfidic and DO is confidently zero). Check "C224_ctd_cor.xlsx" for details.
+# Plot again
+plotProfile(C224_1_dc, ytype = "depth", "oxygen6") 
+
+## C224 cast 2
+
+# Load in with oce package
+C224_2 <- read.oce("CTD_data/C224_2.cnv")
+# Trim the file to only the downcast
+C224_2_dc <- ctdTrim(C224_2)
+# Plot full profile
+plot(C224_2_dc)
+# Plot only oxygen
+plotProfile(C224_2_dc, ytype = "depth", "oxygen6")
+# Correct DO by sensor offset
+C224_2_dc[["oxygen6"]] <- C224_2_dc[["oxygen6"]]-3.53
+# Plot again
+plotProfile(C224_2_dc, ytype = "depth", "oxygen6") 
+
+## C224 cast 3
+
+# Load in with oce package
+C224_3 <- read.oce("CTD_data/C224_3.cnv")
+# Trim the file to only the downcast
+C224_3_dc <- ctdTrim(C224_3)
+# Plot full profile
+plot(C224_3_dc)
+# Plot only oxygen
+plotProfile(C224_3_dc, ytype = "depth", "oxygen6") 
+# Correct DO by sensor offset
+C224_3_dc[["oxygen6"]] <- C224_3_dc[["oxygen6"]]-3.82
+# Plot again
+plotProfile(C224_3_dc, ytype = "depth", "oxygen6") 
+
+
+# Plot  oxygen data from all casts on same plot
+plotProfile(C224_3_dc, ytype = "depth", "oxygen6", col = "blue")
+lines(C224_1_dc[["oxygen6"]], C224_1_dc[["depth"]], col = "black")
+lines(C224_2_dc[["oxygen6"]], C224_2_dc[["depth"]], col = "red")
+```
+
+
+## Next import grab sample data
