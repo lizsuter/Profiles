@@ -1,0 +1,14 @@
+---
+title: "Oceanographic Profiles for Cariaco Chemoautotrophy Paper"
+output: html_notebook
+---
+
+```{r}
+library(oce)
+library(dplyr)
+library(tidyverse)
+library(readxl)
+library(cowplot)
+library(gridGraphics)
+```
+
