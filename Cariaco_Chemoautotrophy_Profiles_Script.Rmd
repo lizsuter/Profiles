@@ -87,6 +87,63 @@ lines(C212_2_4_dc[["oxygen5"]], C212_2_4_dc[["depth"]], col = "green")
 
 
 
+CAR212_3 (Leg 3 [SBU cruise] of Cariaco-212)
+```{r}
+## C212_3 cast 1
+
+# Load in with oce package
+C212_3_1 <- read.oce("CTD_data/C212_3_1.cnv")
+# Trim the file to only the downcast
+C212_3_1_dc <- ctdTrim(C212_3_1)
+# Plot full profile
+plot(C212_3_1_dc)
+# Plot only oxygen
+plotProfile(C212_3_1_dc, ytype = "depth", "oxygen5")
+# Correct DO by sensor offset
+C212_3_1_dc[["oxygen5"]] <- C212_3_1_dc[["oxygen5"]]-0.3 #I had previously determined these offsets by taking the average DO concentration below the chemocline (where conditions are sulfidic and DO is confidently zero). Check "C212_3_ctd_cor.xlsx" for details.
+# Plot again
+plotProfile(C212_3_1_dc, ytype = "depth", "oxygen5") 
+
+## C212_3 cast 2
+
+# Load in with oce package
+C212_3_2 <- read.oce("CTD_data/C212_3_2.cnv")
+# Trim the file to only the downcast
+C212_3_2_dc <- ctdTrim(C212_3_2)
+# Plot full profile
+plot(C212_3_2_dc)
+# Plot only oxygen
+plotProfile(C212_3_2_dc, ytype = "depth", "oxygen5")
+# Correct DO by sensor offset
+C212_3_2_dc[["oxygen5"]] <- C212_3_2_dc[["oxygen5"]]-0.31
+# Plot again
+plotProfile(C212_3_2_dc, ytype = "depth", "oxygen5") 
+
+## C212_3 cast 3
+
+# Load in with oce package
+C212_3_3 <- read.oce("CTD_data/C212_3_3.cnv")
+# Trim the file to only the downcast
+C212_3_3_dc <- ctdTrim(C212_3_3)
+# Plot full profile
+plot(C212_3_3_dc)
+# Plot only oxygen
+plotProfile(C212_3_3_dc, ytype = "depth", "oxygen5") 
+# Correct DO by sensor offset
+C212_3_3_dc[["oxygen5"]] <- C212_3_3_dc[["oxygen5"]]-0.33
+# Plot again
+plotProfile(C212_3_3_dc, ytype = "depth", "oxygen5") 
+
+
+# Plot  oxygen data from all casts on same plot
+plotProfile(C212_3_3_dc, ytype = "depth", "oxygen5", col = "blue")
+lines(C212_3_2_dc[["oxygen5"]], C212_3_2_dc[["depth"]], col = "red")
+lines(C212_3_1_dc[["oxygen5"]], C212_3_1_dc[["depth"]], col = "black")
+```
+
+
+
+
 CAR216_2 (Leg 2 [Omics cruise] of Cariaco-216)
 ```{r}
 ## C216_2 cast 1
@@ -154,6 +211,63 @@ plotProfile(C216_2_1_dc, ytype = "depth", "oxygen5")
 lines(C216_2_2_dc[["oxygen5"]], C216_2_2_dc[["depth"]], col = "red")
 lines(C216_2_3_dc[["oxygen5"]], C216_2_3_dc[["depth"]], col = "blue")
 lines(C216_2_4_dc[["oxygen5"]], C216_2_4_dc[["depth"]], col = "green")
+```
+
+
+
+CAR216_3 (Leg 3 [SBU cruise] of Cariaco-216)
+```{r}
+## C216_3 cast 1
+# Note- the transmissometer data (BAT) for this cruise is bad Something happened to sensor
+
+# Load in with oce package
+C216_3_1 <- read.oce("CTD_data/C216_3_1.cnv")
+# Trim the file to only the downcast
+C216_3_1_dc <- ctdTrim(C216_3_1)
+# Plot full profile
+plot(C216_3_1_dc)
+# Plot only oxygen
+plotProfile(C216_3_1_dc, ytype = "depth", "oxygen5")
+# Correct DO by sensor offset
+C216_3_1_dc[["oxygen5"]] <- C216_3_1_dc[["oxygen5"]]-2.20 #I had previously determined these offsets by taking the average DO concentration below the chemocline (where conditions are sulfidic and DO is confidently zero). Check "C216_3_ctd_cor.xlsx" for details.
+# Plot again
+plotProfile(C216_3_1_dc, ytype = "depth", "oxygen5") 
+
+## C216_3 cast 2
+
+# Load in with oce package
+C216_3_2 <- read.oce("CTD_data/C216_3_2.cnv")
+# Trim the file to only the downcast
+C216_3_2_dc <- ctdTrim(C216_3_2)
+# Plot full profile
+plot(C216_3_2_dc)
+# Plot only oxygen
+plotProfile(C216_3_2_dc, ytype = "depth", "oxygen5")
+# Correct DO by sensor offset
+C216_3_2_dc[["oxygen5"]] <- C216_3_2_dc[["oxygen5"]]-2.34
+# Plot again
+plotProfile(C216_3_2_dc, ytype = "depth", "oxygen5") 
+
+## C216_3 cast 3
+
+# Load in with oce package
+C216_3_3 <- read.oce("CTD_data/C216_3_3.cnv")
+# Trim the file to only the downcast
+C216_3_3_dc <- ctdTrim(C216_3_3)
+# Plot full profile
+plot(C216_3_3_dc)
+# Plot only oxygen
+plotProfile(C216_3_3_dc, ytype = "depth", "oxygen5") 
+# Correct DO by sensor offset
+C216_3_3_dc[["oxygen5"]] <- C216_3_3_dc[["oxygen5"]]-2.36
+# Plot again
+plotProfile(C216_3_3_dc, ytype = "depth", "oxygen5") 
+
+
+# Plot  oxygen data from all casts on same plot
+plotProfile(C216_3_3_dc, ytype = "depth", "oxygen5", col = "blue")
+lines(C216_3_2_dc[["oxygen5"]], C216_3_2_dc[["depth"]], col = "red")
+lines(C216_3_1_dc[["oxygen5"]], C216_3_1_dc[["depth"]], col = "black")
 ```
 
 
