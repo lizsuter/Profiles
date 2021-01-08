@@ -11,6 +11,7 @@ library(tidyverse)
 library(readxl)
 library(cowplot)
 library(gridGraphics)
+library(cowplot)
 ```
 
 
@@ -326,7 +327,25 @@ lines(C224_1_dc[["oxygen6"]], C224_1_dc[["depth"]], col = "black")
 lines(C224_2_dc[["oxygen6"]], C224_2_dc[["depth"]], col = "red")
 ```
 
+## Convert ctd data type to tibbles type
 
-## Next import grab sample data
+### TBD
+C216_2_2 <- tibble("depth" = C216_2_2_trim[["depth"]], "oxygen" = C216_2_2_trim[["oxygen5"]], "BAT" = C216_2_2_trim[["beamAttenuation"]])
+C216_2_4 <- tibble("depth" = C216_2_4_trim[["depth"]], "oxygen" = C216_2_4_trim[["oxygen5"]], "BAT" = C216_2_4_trim[["beamAttenuation"]])
+
+
+
+## Import grab sample data
+
+```{r}
+C212_2_grab <- read_csv("GrabSample_data/C212_2.csv")
+C212_3_grab <- read_csv("GrabSample_data/C212_3.csv")
+
+C216_2_grab <- read_csv("GrabSample_data/C216_2.csv")
+C216_3_grab <- read_csv("GrabSample_data/C216_3.csv")
+
+C224_grab <- read_csv("GrabSample_data/C224.csv")
+
+```
 
 
