@@ -9,8 +9,8 @@ library(oce)
 library(ocedata)
 library(tidyverse)
 library(readxl)
-library(cowplot)
 library(gridGraphics)
+library(gginnards)
 library(cowplot)
 ```
 
@@ -443,13 +443,30 @@ For making multiple panels, use cowplot?: https://stackoverflow.com/questions/12
 
 # Make filled area plot of DO + H2S with geom_area
 
-C212_panel1 <- ggplot(C212_2, aes(x = oxygen, y = depth)) +
-  geom_area() +
-  scale_y_reverse(limits = c(400, 100))
-  
+# C212_2
+C212_2_panel1 <- ggplot(C212_2) +
+  geom_line(aes(y = BAT, x = depth), color="black", size=1.5, na.rm = T) +
+  geom_area(aes(y = oxygen/100, x = depth), fill = "cyan", alpha = 0.4) +
+  scale_y_continuous(name = expression(BAT~"["~m^{-1}~"]"),sec.axis = sec_axis(trans=~.*100, name="oxygen [µM]"), expand = c(0, 0)) +
+  coord_flip() +
+  scale_x_reverse(limits = c(400, 100), expand = c(0, 0)) +
+  theme_bw()
+move_layers(C212_2_panel1, "GeomLine", position = "top") # uses function from gginnards to move geom_line on top of geom_area
 
 
-C212_panel1
+C212_2_panel2 <- ggplot(C212_2) +
+  geom_line(aes(y = Micro_Abund_DAPI, x = depth, group=1), color="black", size=1, na.rm = T, lty = 2) +
+  geom_point(aes(y = Micro_Abund_DAPI, x = depth), shape = 21, colour = "black", fill = "white", size = 2) +
+  geom_area(aes(y = oxygen/10, x = depth), fill = "cyan", alpha = 0.4) +
+  scale_y_continuous(name = expression(Microbial~Abund~"["~x10^{8}~L^{-1}~"]"),sec.axis = sec_axis(trans=~.*10, name="oxygen [µM]"), expand = c(0, 0)) +
+  coord_flip() +
+  scale_x_reverse(limits = c(400, 100), expand = c(0, 0)) +
+  theme_bw()
+move_layers(C212_2_panel2, "GeomPath", position = "top") # uses function from gginnards to move geom_line on top of geom_area
+
+
+
+
 
 ```
 
