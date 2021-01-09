@@ -328,11 +328,72 @@ lines(C224_2_dc[["oxygen6"]], C224_2_dc[["depth"]], col = "red")
 ```
 
 ## Convert ctd data type to tibbles type
+Put in depth, DO, BAT from downcast for each cast/cruise combo
+```{r}
+# CAR212
+# CAR212, leg 2, casts 1-4
+C212_2_1_ctd <- tibble("depth" = C212_2_1_dc[["depth"]], "oxygen" = C212_2_1_dc[["oxygen5"]], "BAT" =
+                         C212_2_1_dc[["beamAttenuation"]])
 
-### TBD
-C216_2_2 <- tibble("depth" = C216_2_2_trim[["depth"]], "oxygen" = C216_2_2_trim[["oxygen5"]], "BAT" = C216_2_2_trim[["beamAttenuation"]])
-C216_2_4 <- tibble("depth" = C216_2_4_trim[["depth"]], "oxygen" = C216_2_4_trim[["oxygen5"]], "BAT" = C216_2_4_trim[["beamAttenuation"]])
+C212_2_2_ctd <- tibble("depth" = C212_2_2_dc[["depth"]], "oxygen" = C212_2_2_dc[["oxygen5"]], "BAT" =
+                         C212_2_2_dc[["beamAttenuation"]])
 
+C212_2_3_ctd <- tibble("depth" = C212_2_3_dc[["depth"]], "oxygen" = C212_2_3_dc[["oxygen5"]], "BAT" =
+                         C212_2_3_dc[["beamAttenuation"]])
+
+C212_2_4_ctd <- tibble("depth" = C212_2_4_dc[["depth"]], "oxygen" = C212_2_4_dc[["oxygen5"]], "BAT" =
+                         C212_2_4_dc[["beamAttenuation"]])
+
+
+#CAR212, leg 3, casts 1-3
+C212_3_1_ctd <- tibble("depth" = C212_3_1_dc[["depth"]], "oxygen" = C212_3_1_dc[["oxygen5"]], "BAT" =
+                         C212_3_1_dc[["beamAttenuation"]])
+
+C212_3_2_ctd <- tibble("depth" = C212_3_2_dc[["depth"]], "oxygen" = C212_3_2_dc[["oxygen5"]], "BAT" =
+                         C212_3_2_dc[["beamAttenuation"]])
+
+C212_3_3_ctd <- tibble("depth" = C212_3_3_dc[["depth"]], "oxygen" = C212_3_3_dc[["oxygen5"]], "BAT" =
+                         C212_3_3_dc[["beamAttenuation"]])
+
+# CAR216
+# CAR216, leg 2, casts 1-4
+C216_2_1_ctd <- tibble("depth" = C216_2_1_dc[["depth"]], "oxygen" = C216_2_1_dc[["oxygen5"]], "BAT" =
+                         C216_2_1_dc[["beamAttenuation"]])
+
+C216_2_2_ctd <- tibble("depth" = C216_2_2_dc[["depth"]], "oxygen" = C216_2_2_dc[["oxygen5"]], "BAT" =
+                         C216_2_2_dc[["beamAttenuation"]])
+
+C216_2_3_ctd <- tibble("depth" = C216_2_3_dc[["depth"]], "oxygen" = C216_2_3_dc[["oxygen5"]], "BAT" =
+                         C216_2_3_dc[["beamAttenuation"]])
+
+C216_2_4_ctd <- tibble("depth" = C216_2_4_dc[["depth"]], "oxygen" = C216_2_4_dc[["oxygen5"]], "BAT" =
+                         C216_2_4_dc[["beamAttenuation"]])
+
+
+# CAR216, leg 3, casts 1-3
+C216_3_1_ctd <- tibble("depth" = C216_3_1_dc[["depth"]], "oxygen" = C216_3_1_dc[["oxygen5"]], "BAT" =
+                         C216_3_1_dc[["beamAttenuation"]])
+
+C216_3_2_ctd <- tibble("depth" = C216_3_2_dc[["depth"]], "oxygen" = C216_3_2_dc[["oxygen5"]], "BAT" =
+                         C216_3_2_dc[["beamAttenuation"]])
+
+C216_3_3_ctd <- tibble("depth" = C216_3_3_dc[["depth"]], "oxygen" = C216_3_3_dc[["oxygen5"]], "BAT" =
+                         C216_3_3_dc[["beamAttenuation"]])
+
+
+#CAR224
+# CAR224, [only one leg], casts 1-3
+C224_1_ctd <- tibble("depth" = C224_1_dc[["depth"]], "oxygen" = C224_1_dc[["oxygen6"]], "BAT" =
+                       C224_1_dc[["beamAttenuation"]])
+
+C224_2_ctd <- tibble("depth" = C224_2_dc[["depth"]], "oxygen" = C224_2_dc[["oxygen6"]], "BAT" =
+                       C224_2_dc[["beamAttenuation"]])
+
+C224_3_ctd <- tibble("depth" = C224_3_dc[["depth"]], "oxygen" = C224_3_dc[["oxygen6"]], "BAT" = 
+                     C224_3_dc[["beamAttenuation"]])
+
+
+```
 
 
 ## Import grab sample data
@@ -348,4 +409,47 @@ C224_grab <- read_csv("GrabSample_data/C224.csv")
 
 ```
 
+## Combine CTD and Grab Sample Data for each Cruise into one tibble
+For each cruise I have to make a decision on which CTD cast to use for plotting. Check oxygen profiles (above) for major features and also notes on which samples came from which casts.
+
+**C212_2**: DNA for metagnome/ iTags came from cast 3 so use CTD data from cast 3, C212_2_3
+
+**C212_3**: Use cast 1, which targetted samples from the chemoautotrophy zone (depths 260-320m). CTD goes down to 399m
+
+**C216_2**: In virus paper, we used CTD data from C216_2_2 and C216_2_4 because those are where DNA/ VLP samples came from. Both casts have the full profile to 900m and both collected at 148, 200, 237, 247, 267, and 900m. Looking at DO profiles (above) they are very similar so it doesn't matter too much (unlike for C212_2). So plot C216_2_2 for now.
+
+**C216_3**: Use cast 1, which targetted samples from the chemoautotrophy zone (depths 250-310m). CTD goes down to 399m
+
+**C224**: Use cast 1, which targetted samples from the chemoautotrophy zone (depths 277-329m). CTD goes down to 397m
+
+
+```{r}
+C212_2 <- full_join(C212_2_3_ctd,C212_2_grab, by = "depth")
+C212_3 <- full_join(C212_3_1_ctd,C212_3_grab, by = "depth")
+
+C216_2 <- full_join(C216_2_2_ctd,C216_2_grab, by = "depth")
+C216_3 <- full_join(C216_3_1_ctd,C216_3_grab, by = "depth")
+
+C224 <- full_join(C224_1_ctd,C224_grab, by = "depth")
+
+```
+
+
+## Plots
+
+For making multiple panels, use cowplot?: https://stackoverflow.com/questions/1249548/side-by-side-plots-with-ggplot2 
+
+```{r}
+
+# Make filled area plot of DO + H2S with geom_area
+
+C212_panel1 <- ggplot(C212_2, aes(x = oxygen, y = depth)) +
+  geom_area() +
+  scale_y_reverse(limits = c(400, 100))
+  
+
+
+C212_panel1
+
+```
 
