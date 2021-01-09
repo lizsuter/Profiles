@@ -13,6 +13,8 @@ library(tidyverse)
 library(gginnards)
 library(cowplot)
 library(egg)
+#library(ggpubr)
+#library(patchwork)
 ```
 
 
@@ -436,73 +438,102 @@ C224 <- full_join(C224_1_ctd,C224_grab, by = "depth")
 ```
 
 
+Next make the data "tidy" for for tidyverse format, which will make it easier to plot
+```{r}
+C212_2 <- drop_na(pivot_longer(C212_2, cols = colnames(C212_2)[2:9]))
+```
+
+
 ## Plots
 
 Make multi-panel profile plots for each separate cruise
 
 ```{r}
 # C212_2
-
-C212_2_panel1 <- ggplot(C212_2) +
-  geom_line(aes(y = BAT, x = depth), color="black", size=1.5, na.rm = T) +
-  geom_area(aes(y = oxygen/300, x = depth), fill = "cyan") +
+C212_2_panel1 <- ggplot() +
+  geom_line(data = subset(C212_2, name %in% c("BAT")), aes(x = depth, y = value, color = "black"), size=1.5, na.rm = T) +
+  geom_area(data = subset(C212_2, name %in% c("oxygen")), aes(x = depth, y = value/300, fill = "cyan")) +
+  scale_fill_manual(name = '', values = c('cyan'='cyan'), labels = c('oxygen')) +
+  scale_colour_manual(name = '', values =c('black'='black', 'cyan'='cyan'), labels = c('BAT', 'oxygen')) +
   scale_y_continuous(name = expression(BAT~"["~m^{-1}~"]"),
                      sec.axis = sec_axis(trans=~.*300, name="oxygen [µM]"), expand = c(0, 0)) +
   scale_x_continuous(name = "depth [m]") +
   coord_flip() +
   scale_x_reverse(limits = c(400, 100), expand = c(0, 0)) +
-  theme_bw() + 
-  theme(legend.position="none")
-
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) # Put a small margin on L and R for later
 C212_2_panel1 <- move_layers(C212_2_panel1, "GeomArea", position = "bottom")  # move_layers from gginnards can shuffle geom layers in plot
-C212_2_panel1 <- set_panel_size(C212_2_panel1, width  = unit(3, "cm"), height = unit(6, "cm"))  # set explicit panel size so they will be consistent for all figures. Function from egg package
+#C212_2_panel1 <- set_panel_size(C212_2_panel1, width  = unit(3, "cm"), height = unit(6, "cm"))  # set explicit panel size so they will be consistent for all figures. Function from egg package
 
 
 
-C212_2_panel2 <- ggplot(C212_2) +
-  geom_line(data = C212_2[!is.na(C212_2$Micro_Abund_DAPI),], aes(y = Micro_Abund_DAPI, x = depth), color="black", size=1, na.rm = T, lty = 2) + # subset and only select rows with data, otherwise the NAs mess up the line
-  geom_point(aes(y = Micro_Abund_DAPI, x = depth), shape = 21, colour = "black", fill = "white", size = 3) +
-  geom_area(aes(y = oxygen/8, x = depth), fill = "cyan") +
+C212_2_panel2 <- ggplot() +
+  geom_line(data = subset(C212_2, name %in% c("Micro_Abund_DAPI")), aes(x = depth, y = value, color = "black"), size=1, lty = 2) +
+  geom_point(data = subset(C212_2, name %in% c("Micro_Abund_DAPI")), aes(x = depth, y = value, color = "black"), shape = 21, fill = "white", size = 3) +
+  geom_area(data = subset(C212_2, name %in% c("oxygen")), aes(x = depth, y = value/8, fill = "cyan")) +
+  scale_fill_manual(name = '', values = c('cyan'='cyan'), labels = c('oxygen')) +
+  scale_colour_manual(name = '', values =c('black'='black'), labels = c('Microbial Abund')) +
   scale_y_continuous(name = expression(Microbial~Abund~"["~x10^{8}~L^{-1}~"]"),
                      sec.axis = sec_axis(trans=~.*8, name="oxygen [µM]"), expand = c(0, 0)) +
   coord_flip() +
   scale_x_reverse(limits = c(400, 100), expand = c(0, 0)) +
   theme_bw() +
-  theme(legend.position="none") +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
   theme(axis.text.y=element_blank(), axis.title.y=element_blank()) # turn off depth label for all panels after 1st to reduce redundancy
 C212_2_panel2 <- move_layers(C212_2_panel2, "GeomArea", position = "bottom") 
-C212_2_panel2 <- set_panel_size(C212_2_panel2, width  = unit(3, "cm"), height = unit(6, "cm")) 
+#C212_2_panel2 <- set_panel_size(C212_2_panel2, width  = unit(3, "cm"), height = unit(6, "cm")) 
 
 
 
-C212_2_panel3 <- ggplot(C212_2) +
-  geom_line(data = C212_2[!is.na(C212_2$NH4),], aes(y = NH4, x = depth), color="red", size=1, na.rm = T, lty = 1) +
-  geom_point(aes(y = NH4, x = depth), shape = 15, colour = "red", size = 3) +
-  geom_line(data = C212_2[!is.na(C212_2$NO_x),], aes(y = NO_x, x = depth), color="darkgreen", size=1, na.rm = T) +
-  geom_point(aes(y = NO_x, x = depth), shape = 17, colour = "darkgreen", size = 3) +
-  geom_area(aes(y = oxygen/8, x = depth), fill = "cyan") +
+C212_2_panel3 <- ggplot() +
+  geom_line(data = subset(C212_2, name %in% c("NH4")), aes(x = depth, y = value, color="red"), size=1, lty = 1) +
+  geom_point(data = subset(C212_2, name %in% c("NH4")), aes(x = depth, y = value, color="red"), shape = 15, size = 3) +
+  geom_line(data = subset(C212_2, name %in% c("NO_x")), aes(x = depth, y = value, color="darkgreen"), size=1, lty = 1) +
+  geom_point(data = subset(C212_2, name %in% c("NO_x")), aes(x = depth, y = value, color="darkgreen"), shape = 17, size = 3) +
+  geom_area(data = subset(C212_2, name %in% c("oxygen")), aes(x = depth, y = value/8, fill = "cyan")) +
+  scale_fill_manual(name = '', values = c('cyan'='cyan'), labels = c('oxygen')) +
+  scale_colour_manual(name = '', values =c('red'='red','darkgreen'='darkgreen'), labels = c('NH4','NOx')) +
   scale_y_continuous(name = expression(NH[4]~or~NO[x]~"[µM]"),
                      sec.axis = sec_axis(trans=~.*8, name="oxygen [µM]"), expand = c(0, 0)) +
-  scale_x_continuous(name = "") +
   coord_flip() +
   scale_x_reverse(limits = c(400, 100), expand = c(0, 0)) +
   theme_bw() +
-  theme(legend.position="none") +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
   theme(axis.text.y=element_blank(), axis.title.y=element_blank())
 C212_2_panel3 <- move_layers(C212_2_panel3, "GeomArea", position = "bottom") 
-C212_2_panel3 <- set_panel_size(C212_2_panel3, width  = unit(3, "cm"), height = unit(6, "cm")) 
+#C212_2_panel3 <- set_panel_size(C212_2_panel3, width  = unit(3, "cm"), height = unit(6, "cm")) 
 
 
 # cowplot- put together panels, turning legends off
-C212_2_plot <- plot_grid(C212_2_panel1, C212_2_panel2, C212_2_panel3, labels = "AUTO", nrow = 1)
+C212_2_plot <- plot_grid(C212_2_panel1, C212_2_panel2, C212_2_panel3, labels = "AUTO", nrow = 1, hjust = -1)
 C212_2_plot
 
-# get legend that is horizontally laid out BLARGHHGHGHGHGGHGH CANNOT GET THIS TO WORK FOR SH*** STOPPED 1/9/20
-legend_b <- get_legend(C212_2_panel3)
+# get legend that is horizontally laid out BLARGHHGHGHGHGGHGH keep working on this: https://stackoverflow.com/questions/52060601/ggplot-multiple-legends-arrangement
+legend_1 <- get_legend(
+  C212_2_panel1 + 
+    guides(color = guide_legend(nrow = 1)) +
+    theme(legend.position = "bottom"))
+legend_2 <- get_legend(
+  C212_2_panel2 + 
+    guides(color = guide_legend(nrow = 1)) +
+    theme(legend.position = "bottom"))
+legend_3 <- get_legend(
+  C212_2_panel3 + 
+    guides(color = guide_legend(nrow = 1)) +
+    theme(legend.position = "bottom"))
 
-# add the legend underneath the row we made earlier
-plot_grid(C212_2_plot, legend_b, nrow = 2)
+legend123 <- plot_grid(leg12, leg30,
+                    ncol = 3)
+plot_grid(C212_2_plot, legend_1, legend_2, nrow = 3, ncol = 1, rel_heights = c(1, 1, .1))
+
+
+
 
 # save_plot("Figures/C212_2_plot.eps", C212_2_plot)
+
+
 ```
 
