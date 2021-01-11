@@ -8,13 +8,9 @@ Load libraries
 library(oce)
 library(ocedata)
 library(tidyverse)
-#library(readxl)
-#library(gridGraphics)
 library(gginnards)
 library(cowplot)
 library(egg)
-#library(ggpubr)
-#library(patchwork)
 ```
 
 
@@ -464,14 +460,12 @@ C212_2_panel1 <- ggplot() +
   theme(legend.position = "none") +
   theme(plot.margin = margin(0, 10, 0, 10)) # Put a small margin on L and R for later
 C212_2_panel1 <- move_layers(C212_2_panel1, "GeomArea", position = "bottom")  # move_layers from gginnards can shuffle geom layers in plot
-#C212_2_panel1 <- set_panel_size(C212_2_panel1, width  = unit(3, "cm"), height = unit(6, "cm"))  # set explicit panel size so they will be consistent for all figures. Function from egg package
-
 
 
 C212_2_panel2 <- ggplot() +
   geom_line(data = subset(C212_2, name %in% c("Micro_Abund_DAPI")), aes(x = depth, y = value, color = "black"), size=1, lty = 2) +
   geom_point(data = subset(C212_2, name %in% c("Micro_Abund_DAPI")), aes(x = depth, y = value, color = "black"), shape = 21, fill = "white", size = 3) +
-  geom_area(data = subset(C212_2, name %in% c("oxygen")), aes(x = depth, y = value/8, fill = "cyan")) +
+  geom_area(data = subset(C212_2, name %in% c("oxygen")), aes(x = depth, y = value/8, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together
   scale_fill_manual(name = '', values = c('cyan'='cyan'), labels = c('oxygen')) +
   scale_colour_manual(name = '', values =c('black'='black'), labels = c('Microbial Abund')) +
   scale_y_continuous(name = expression(Microbial~Abund~"["~x10^{8}~L^{-1}~"]"),
@@ -483,7 +477,6 @@ C212_2_panel2 <- ggplot() +
   theme(plot.margin = margin(0, 10, 0, 10)) +
   theme(axis.text.y=element_blank(), axis.title.y=element_blank()) # turn off depth label for all panels after 1st to reduce redundancy
 C212_2_panel2 <- move_layers(C212_2_panel2, "GeomArea", position = "bottom") 
-#C212_2_panel2 <- set_panel_size(C212_2_panel2, width  = unit(3, "cm"), height = unit(6, "cm")) 
 
 
 
@@ -492,7 +485,7 @@ C212_2_panel3 <- ggplot() +
   geom_point(data = subset(C212_2, name %in% c("NH4")), aes(x = depth, y = value, color="red"), shape = 15, size = 3) +
   geom_line(data = subset(C212_2, name %in% c("NO_x")), aes(x = depth, y = value, color="darkgreen"), size=1, lty = 1) +
   geom_point(data = subset(C212_2, name %in% c("NO_x")), aes(x = depth, y = value, color="darkgreen"), shape = 17, size = 3) +
-  geom_area(data = subset(C212_2, name %in% c("oxygen")), aes(x = depth, y = value/8, fill = "cyan")) +
+  geom_area(data = subset(C212_2, name %in% c("oxygen")), aes(x = depth, y = value/8, fill = "cyan"), show.legend = FALSE) +
   scale_fill_manual(name = '', values = c('cyan'='cyan'), labels = c('oxygen')) +
   scale_colour_manual(name = '', values =c('red'='red','darkgreen'='darkgreen'), labels = c('NH4','NOx')) +
   scale_y_continuous(name = expression(NH[4]~or~NO[x]~"[µM]"),
@@ -504,36 +497,42 @@ C212_2_panel3 <- ggplot() +
   theme(plot.margin = margin(0, 10, 0, 10)) +
   theme(axis.text.y=element_blank(), axis.title.y=element_blank())
 C212_2_panel3 <- move_layers(C212_2_panel3, "GeomArea", position = "bottom") 
-#C212_2_panel3 <- set_panel_size(C212_2_panel3, width  = unit(3, "cm"), height = unit(6, "cm")) 
 
 
-# cowplot- put together panels, turning legends off
-C212_2_plot <- plot_grid(C212_2_panel1, C212_2_panel2, C212_2_panel3, labels = "AUTO", nrow = 1, hjust = -1)
+
+# extract legend from plots, horizontally laid out https://stackoverflow.com/questions/52060601/ggplot-multiple-legends-arrangement
+legend_1 <- get_legend(C212_2_panel1 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_2 <- get_legend(C212_2_panel2 + 
+                        guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_3 <- get_legend(C212_2_panel3 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+
+
+# set explicit panel size so they will be consistent for all figures. Function from egg package (need to do this after extracting legend)
+C212_2_panel1 <- set_panel_size(C212_2_panel1, width  = unit(3, "cm"), height = unit(6, "cm"))  
+C212_2_panel2 <- set_panel_size(C212_2_panel2, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C212_2_panel3 <- set_panel_size(C212_2_panel3, width  = unit(3, "cm"), height = unit(6, "cm")) 
+
+
+# cowplot- put together panels, without legends
+panels <- plot_grid(C212_2_panel1, C212_2_panel2, C212_2_panel3, labels = "AUTO", nrow = 1, hjust = -1.5, vjust = 4.5)
+panels
+
+# put together legends
+leg123 <- plot_grid(legend_1, legend_2, legend_3, nrow = 1, align = "hv")
+leg123
+
+# combine plot and legend in 2 rows
+C212_2_plot <- plot_grid(panels, leg123, nrow = 2, rel_heights = c(1,.1))
 C212_2_plot
 
-# get legend that is horizontally laid out BLARGHHGHGHGHGGHGH keep working on this: https://stackoverflow.com/questions/52060601/ggplot-multiple-legends-arrangement
-legend_1 <- get_legend(
-  C212_2_panel1 + 
-    guides(color = guide_legend(nrow = 1)) +
-    theme(legend.position = "bottom"))
-legend_2 <- get_legend(
-  C212_2_panel2 + 
-    guides(color = guide_legend(nrow = 1)) +
-    theme(legend.position = "bottom"))
-legend_3 <- get_legend(
-  C212_2_panel3 + 
-    guides(color = guide_legend(nrow = 1)) +
-    theme(legend.position = "bottom"))
 
-legend123 <- plot_grid(leg12, leg30,
-                    ncol = 3)
-plot_grid(C212_2_plot, legend_1, legend_2, nrow = 3, ncol = 1, rel_heights = c(1, 1, .1))
-
-
-
-
-# save_plot("Figures/C212_2_plot.eps", C212_2_plot)
-
-
+save_plot("Figures/C212_2_plot.eps", C212_2_plot)
 ```
 
+
+before moving on, pivot_wider for all cruises
