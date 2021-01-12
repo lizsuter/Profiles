@@ -7,3 +7,4 @@ For Pachiadaki et al. (Cariaco chemoautotrophy paper): Cariaco_Chemoautotrophy_P
 This project uses the R package, [OCE](https://dankelley.github.io/oce/) for oceanographic profiles as well as oather common tools.
 
 
+Preview notebook [here](https://htmlpreview.github.io/?https://github.com/lizsuter/Profiles/blob/master/Cariaco_Chemoautotrophy_Profiles_Script.html).
