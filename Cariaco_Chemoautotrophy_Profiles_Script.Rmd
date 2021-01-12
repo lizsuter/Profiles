@@ -1,6 +1,8 @@
 ---
 title: "Oceanographic Profiles for Cariaco Chemoautotrophy Paper"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 Load libraries
@@ -453,10 +455,10 @@ Make multi-panel profile plots for each separate cruise using cowplot and egg pa
 C212_2_panel1 <- ggplot() +
   geom_line(data = subset(C212_2, name %in% c("BAT")), aes(x = depth, y = value, color = "black"), size=1.5, na.rm = T) +
   geom_area(data = subset(C212_2, name %in% c("oxygen")), aes(x = depth, y = value/300, fill = "cyan")) + # use scaling factor to put oxygen and BAT on same axis- WILL CHANGE FOR EVERY PANEL
-  scale_fill_manual(name = '', values = c('cyan'='cyan'), labels = c('oxygen')) +
-  scale_colour_manual(name = '', values =c('black'='black', 'cyan'='cyan'), labels = c('BAT', 'oxygen')) +
-  scale_y_continuous(name = expression(BAT~"["~m^{-1}~"]"),
-                     sec.axis = sec_axis(trans=~.*300, name="oxygen [µM]"), expand = c(0, 0)) +
+  scale_fill_manual(name = '', values = c('cyan'='cyan'), labels = c('O2')) +
+  scale_colour_manual(name = '', values =c('black'='black', 'cyan'='cyan'), labels = c('BAT', 'O2')) +
+  scale_y_continuous(name = expression(BAT~"["*m^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~.*300, name=expression(O[2]~"[µM]")), expand = c(0, 0)) +
   scale_x_continuous(name = "depth [m]") +
   scale_x_reverse(expand = c(0, 0)) +
   coord_cartesian() + # insead of limits, use coord_cartesian so the shading doesn't get cutoff
@@ -474,8 +476,8 @@ C212_2_panel2 <- ggplot() +
   geom_area(data = subset(C212_2, name %in% c("oxygen")), aes(x = depth, y = value/8, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
   scale_fill_manual(name = '', values = c('cyan'='cyan'), labels = c('oxygen')) +
   scale_colour_manual(name = '', values =c('black'='black'), labels = c('Microbial Abund')) +
-  scale_y_continuous(name = expression(Microbial~Abund~"["~x10^{8}~L^{-1}~"]"),
-                     sec.axis = sec_axis(trans=~.*8, name="oxygen [µM]"), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_y_continuous(name = expression(Microbial~Abund~"["*x10^{8}~L^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~.*8, name=expression(O[2]~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
   scale_x_reverse(expand = c(0, 0)) +
   coord_cartesian() + 
   coord_flip(xlim = c(400, 100), ylim = c(0, 150/8)) + # scaling factor CHANGE EVERY PANEL
@@ -496,7 +498,7 @@ C212_2_panel3 <- ggplot() +
   geom_area(data = subset(C212_2, name %in% c("oxygen")), aes(x = depth, y = value/8, fill = "cyan"), show.legend = FALSE) + # scaling factor CHANGE EVERY PANEL
   scale_fill_manual(name = '', values = c('cyan'='cyan'), labels = c('oxygen')) +
   scale_y_continuous(name = expression(NH[4]~or~NO[x]~"[µM]"),
-                     sec.axis = sec_axis(trans=~.*8, name="oxygen [µM]"), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+                     sec.axis = sec_axis(trans=~.*8, name=expression(O[2]~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
   scale_x_reverse(expand = c(0, 0)) +
   coord_cartesian() + 
   coord_flip(xlim = c(400, 100), ylim = c(0, 150/8)) + # scaling factor CHANGE EVERY PANEL
@@ -536,10 +538,10 @@ leg123
 
 # combine plot and legend in 2 rows
 C212_2_plot <- plot_grid(panels, leg123, nrow = 2, rel_heights = c(1,.1))
-C212_2_plot
+# C212_2_plot
 
 
-save_plot("Figures/C212_2_plot.eps", C212_2_plot)
+save_plot("Figures/C212_2_plot.eps", C212_2_plot, base_height = 4.5)
 ```
 
 
@@ -553,8 +555,8 @@ C212_3_panel1 <- ggplot() +
   geom_area(data = subset(C212_3, name %in% c("H2S")), aes(x = depth, y = value/300, fill = "red4")) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
   scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
   scale_colour_manual(name = '', values =c('black'='black', 'cyan'='cyan', 'red4'='red4'), labels = c('BAT', 'oxygen','H2S')) +
-  scale_y_continuous(name = expression(BAT~"["~m^{-1}~"]"),
-                     sec.axis = sec_axis(trans=~.*300, name="O2 or H2S [µM]"), expand = c(0, 0)) +
+  scale_y_continuous(name = expression(BAT~"["*m^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~.*300, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) +
   scale_x_continuous(name = "depth [m]") +
   scale_x_reverse(expand = c(0, 0)) +
   coord_cartesian() + # insead of limits, use coord_cartesian so the shading doesn't get cutoff
@@ -574,8 +576,8 @@ C212_3_panel2 <- ggplot() +
   geom_area(data = subset(C212_3, name %in% c("H2S")), aes(x = depth, y = value/8, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
   scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
   scale_colour_manual(name = '', values =c('black'='black'), labels = c('Microbial Abund')) +
-  scale_y_continuous(name = expression(Microbial~Abund~"["~x10^{8}~L^{-1}~"]"),
-                     sec.axis = sec_axis(trans=~.*8, name="O2 or H2S [µM]"), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_y_continuous(name = expression(Microbial~Abund~"["*x10^{8}~L^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~.*8, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
   scale_x_reverse(expand = c(0, 0)) +
   coord_cartesian() + 
   coord_flip(xlim = c(400, 100), ylim = c(0, 150/8)) + # scaling factor CHANGE EVERY PANEL
@@ -587,16 +589,16 @@ C212_3_panel2 <- move_layers(C212_3_panel2, "GeomArea", position = "bottom")
 
 
 C212_3_panel3 <- ggplot() +
-  geom_line(data = subset(C212_3, name %in% c("NH4","NO3")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
-  geom_point(data = subset(C212_3, name %in% c("NH4","NO3")), aes(x = depth, y = value, color=name, shape = name), size = 3) +
-  scale_color_manual(name = ' ', values =c("red", "goldenrod4"), labels = c('NH4','NO3')) +
-  scale_shape_manual(name = ' ', values = c(15,18), labels = c('NH4','NO3')) +
-  scale_linetype_manual(name = ' ', values = c("solid","dotted"), labels = c('NH4','NO3')) +
+  geom_line(data = subset(C212_3, name %in% c("NO3","NO2_x10","NH4")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C212_3, name %in% c("NO3","NO2_x10","NH4")), aes(x = depth, y = value, color=name, shape = name), size = 3) +
+  scale_color_manual(name = ' ', values =c("red", "blue4", "goldenrod4"), labels = c('NH4','NO2 x10','NO3')) +
+  scale_shape_manual(name = ' ', values = c(15,18,17), labels = c('NH4','NO2 x10','NO3')) +
+  scale_linetype_manual(name = ' ', values = c("solid","dotted","dashed"), labels = c('NH4','NO2 x10','NO3')) +
   geom_area(data = subset(C212_3, name %in% c("oxygen")), aes(x = depth, y = value/8, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
   geom_area(data = subset(C212_3, name %in% c("H2S")), aes(x = depth, y = value/8, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
   scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
   scale_y_continuous(name = "nutrients [µM]",
-                     sec.axis = sec_axis(trans=~.*8, name="O2 or H2S [µM]"), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+                     sec.axis = sec_axis(trans=~.*8, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
   scale_x_reverse(expand = c(0, 0)) +
   coord_cartesian() + 
   coord_flip(xlim = c(400, 100), ylim = c(0, 150/8)) + # scaling factor CHANGE EVERY PANEL
@@ -606,16 +608,93 @@ C212_3_panel3 <- ggplot() +
   theme(axis.text.y=element_blank(), axis.title.y=element_blank())
 C212_3_panel3 <- move_layers(C212_3_panel3, "GeomArea", position = "bottom") 
 
-## STOPPED HERE- FIGURE OUT HOW TO PLOT NO2 IN ABOVE, MAYBE MULTIPLY BY 10. JAN 11 
+
+C212_3_panel4 <- ggplot() +
+  geom_line(data = subset(C212_3, name %in% c("CH4","PO4")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C212_3, name %in% c("CH4","PO4")), aes(x = depth, y = value, color=name, shape = name), size = 3) +
+  scale_color_manual(name = ' ', values =c("purple", "green4"), labels = c('CH4','PO4')) +
+  scale_shape_manual(name = ' ', values = c(16,4), labels = c('CH4','PO4')) +
+  scale_linetype_manual(name = ' ', values = c("twodash","dotted"), labels = c('CH4','PO4')) +
+  geom_area(data = subset(C212_3, name %in% c("oxygen")), aes(x = depth, y = value/15, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C212_3, name %in% c("H2S")), aes(x = depth, y = value/15, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_y_continuous(name = expression(CH[4]~or~PO[4]~"[µM]"),
+                     sec.axis = sec_axis(trans=~.*15, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/15)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C212_3_panel4 <- move_layers(C212_3_panel4, "GeomArea", position = "bottom") 
+
+
+C212_3_panel5 <- ggplot() +
+  geom_line(data = subset(C212_3, name %in% c("PartS0","TZVS")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C212_3, name %in% c("PartS0","TZVS")), aes(x = depth, y = value, color=name, shape = name), size = 3) +
+  geom_errorbar(data = subset(C212_3, name %in% c("PartS0")), aes(x = depth, y = value, ymin = as_vector(subset(C212_3, name %in% c("PartS0"))[,3] - subset(C212_3, name %in% c("PartS0_SD"))[,3]), ymax = as_vector(subset(C212_3, name %in% c("PartS0"))[,3] + subset(C212_3, name %in% c("PartS0_SD"))[,3]))) +
+  geom_errorbar(data = subset(C212_3, name %in% c("TZVS")), aes(x = depth, y = value, ymin = as_vector(subset(C212_3, name %in% c("TZVS"))[,3] - subset(C212_3, name %in% c("TZVS_SD"))[,3]), ymax = as_vector(subset(C212_3, name %in% c("TZVS"))[,3] + subset(C212_3, name %in% c("TZVS_SD"))[,3]))) + 
+  scale_color_manual(name = ' ', values =c("black", "yellow3"), labels = c('Part. S0','TZVS')) +
+  scale_shape_manual(name = ' ', values = c(2,17), labels = c('Part. S0','TZVS')) +
+  scale_linetype_manual(name = ' ', values = c("longdash","solid"), labels = c('Part. S0','TZVS')) +
+  geom_area(data = subset(C212_3, name %in% c("oxygen")), aes(x = depth, y = value/150, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C212_3, name %in% c("H2S")), aes(x = depth, y = value/150, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_y_continuous(name = expression("Part."~S^0~or~TZVS~"[µM]"),
+                     sec.axis = sec_axis(trans=~.*150, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/150)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C212_3_panel5 <- move_layers(C212_3_panel5, "GeomArea", position = "bottom") 
+
+
+C212_3_panel6 <- ggplot() +
+  geom_line(data = subset(C212_3, name %in% c("BNP","DCA")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C212_3, name %in% c("BNP","DCA")), aes(x = depth, y = value, color=name, shape = name), size = 3) +
+  geom_errorbar(data = subset(C212_3, name %in% c("BNP")), aes(x = depth, y = value, ymin = as_vector(subset(C212_3, name %in% c("BNP"))[,3] - subset(C212_3, name %in% c("BNP_SD"))[,3]), ymax = as_vector(subset(C212_3, name %in% c("BNP"))[,3] + subset(C212_3, name %in% c("BNP_SD"))[,3]))) + 
+  geom_errorbar(data = subset(C212_3, name %in% c("BNP")), aes(x = depth, y = value, ymin = as_vector(subset(C212_3, name %in% c("BNP"))[,3] - subset(C212_3, name %in% c("BNP_SD"))[,3]), ymax = as_vector(subset(C212_3, name %in% c("BNP"))[,3] + subset(C212_3, name %in% c("BNP_SD"))[,3]))) + 
+  geom_errorbar(data = subset(C212_3, name %in% c("DCA")), aes(x = depth, y = value, ymin = as_vector(subset(C212_3, name %in% c("DCA"))[,3] - subset(C212_3, name %in% c("DCA_SD"))[,3]), ymax = as_vector(subset(C212_3, name %in% c("DCA"))[,3] + subset(C212_3, name %in% c("DCA_SD"))[,3]))) + 
+  scale_color_manual(name = ' ', values =c("darkorange3", "springgreen4"), labels = c('BNP','DCA')) +
+  scale_shape_manual(name = ' ', values = c(16,15), labels = c('BNP','DCA')) +
+  scale_linetype_manual(name = ' ', values = c("dotted","solid"), labels = c('BNP','DCA')) +
+  geom_area(data = subset(C212_3, name %in% c("oxygen")), aes(x = depth, y = value/10, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C212_3, name %in% c("H2S")), aes(x = depth, y = value/10, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_y_continuous(name = expression(BNP~or~DCA~"[µg"~L^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~.*10, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/10)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C212_3_panel6 <- move_layers(C212_3_panel6, "GeomArea", position = "bottom") 
+
+
 
 # extract legend from plots, horizontally laid out 
 legend_1 <- get_legend(C212_3_panel1 + 
-                         guides(color = guide_legend(nrow = 1)) +
+                         guides(color = guide_legend(nrow = 2)) + # for some reason this is not putting in 2 rows. Come back later
                          theme(legend.position = "bottom"))
 legend_2 <- get_legend(C212_3_panel2 + 
                         guides(color = guide_legend(nrow = 1)) +
                          theme(legend.position = "bottom"))
 legend_3 <- get_legend(C212_3_panel3 + 
+                         guides(color = guide_legend(nrow = 2)) + # this one is working
+                         theme(legend.position = "bottom"))
+legend_4 <- get_legend(C212_3_panel4 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_5 <- get_legend(C212_3_panel5 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_6 <- get_legend(C212_3_panel6 + 
                          guides(color = guide_legend(nrow = 1)) +
                          theme(legend.position = "bottom"))
 
@@ -624,10 +703,111 @@ legend_3 <- get_legend(C212_3_panel3 +
 C212_3_panel1 <- set_panel_size(C212_3_panel1, width  = unit(3, "cm"), height = unit(6, "cm"))  
 C212_3_panel2 <- set_panel_size(C212_3_panel2, width  = unit(3, "cm"), height = unit(6, "cm")) 
 C212_3_panel3 <- set_panel_size(C212_3_panel3, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C212_3_panel4 <- set_panel_size(C212_3_panel4, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C212_3_panel5 <- set_panel_size(C212_3_panel5, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C212_3_panel6 <- set_panel_size(C212_3_panel6, width  = unit(3, "cm"), height = unit(6, "cm")) 
 
 
 # cowplot- put together panels, without legends
-panels <- plot_grid(C212_3_panel1, C212_3_panel2, C212_3_panel3, labels = "AUTO", nrow = 1, hjust = -1.5, vjust = 4.5)
+panels <- plot_grid(C212_3_panel1, C212_3_panel2, C212_3_panel3, C212_3_panel4, C212_3_panel5, C212_3_panel6, labels = "AUTO", nrow = 1, hjust = -1.5, vjust = 4.5)
+panels
+
+# put together legends
+leg123456 <- plot_grid(legend_1, legend_2, legend_3, legend_4, legend_5, legend_6, nrow = 1, align = "hv")
+leg123456
+
+# combine plot and legend in 2 rows
+C212_3_plot <- plot_grid(panels, leg123456, nrow = 2, rel_heights = c(1,.1))
+#C212_3_plot
+
+
+save_plot("Figures/C212_3_plot.eps", C212_3_plot, base_height = 4.5, base_width = 12)
+  
+```
+
+
+
+
+#### C216_2
+```{r}
+C216_2_panel1 <- ggplot() +
+  geom_line(data = subset(C216_2, name %in% c("BAT")), aes(x = depth, y = value, color = "black"), size=1.5, na.rm = T) +
+  geom_area(data = subset(C216_2, name %in% c("oxygen")), aes(x = depth, y = value/750, fill = "cyan")) + # use scaling factor to put oxygen and BAT on same axis- WILL CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan'), labels = c('O2')) +
+  scale_colour_manual(name = '', values =c('black'='black', 'cyan'='cyan'), labels = c('BAT', 'O2')) +
+  scale_y_continuous(name = expression(BAT~"["*m^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~.*750, name=expression(O[2]~"[µM]")), expand = c(0, 0)) +
+  scale_x_continuous(name = "depth [m]") +
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + # insead of limits, use coord_cartesian so the shading doesn't get cutoff
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/750)) + # use same scaling factor as for oxygen in geom_area above- WILL CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) # Put a small margin on L and R for later
+C216_2_panel1 <- move_layers(C216_2_panel1, "GeomArea", position = "bottom")  # move_layers from gginnards can shuffle geom layers in plot
+
+
+C216_2_panel2 <- ggplot() +
+  geom_line(data = subset(C216_2, name %in% c("Micro_Abund_DAPI")), aes(x = depth, y = value, color = "black"), size=1, lty = 2) +
+  geom_point(data = subset(C216_2, name %in% c("Micro_Abund_DAPI")), aes(x = depth, y = value, color = "black"), shape = 21, fill = "white", size = 3) +
+  geom_errorbar(data = subset(C216_2, name %in% c("Micro_Abund_DAPI")), aes(x = depth, y = value, ymin = as_vector(subset(C216_2, name %in% c("Micro_Abund_DAPI"))[,3] - subset(C216_2, name %in% c("Micro_Abund_DAPI_SD"))[,3]), ymax = as_vector(subset(C216_2, name %in% c("Micro_Abund_DAPI"))[,3] + subset(C216_2, name %in% c("Micro_Abund_DAPI_SD"))[,3]))) + 
+  geom_area(data = subset(C216_2, name %in% c("oxygen")), aes(x = depth, y = value/37.5, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan'), labels = c('oxygen')) +
+  scale_colour_manual(name = '', values =c('black'='black'), labels = c('Microbial Abund')) +
+  scale_y_continuous(name = expression(Microbial~Abund~"["*x10^{8}~L^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~.*37.5, name=expression(O[2]~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/37.5)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank()) # turn off depth label for all panels after 1st to reduce redundancy
+C216_2_panel2 <- move_layers(C216_2_panel2, "GeomArea", position = "bottom") 
+
+
+
+C216_2_panel3 <- ggplot() +
+  geom_line(data = subset(C216_2, name %in% c("NH4","NO_x")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C216_2, name %in% c("NH4","NO_x")), aes(x = depth, y = value, color=name, shape = name), size = 3) +
+  scale_color_manual(name = ' ', values =c("red","darkgreen"), labels = c('NH4','NOx')) +
+  scale_shape_manual(name = ' ', values = c(15,17), labels = c('NH4','NOx')) +
+  scale_linetype_manual(name = ' ', values = c("solid","dashed"), labels = c('NH4','NOx')) +
+  geom_area(data = subset(C216_2, name %in% c("oxygen")), aes(x = depth, y = value/8, fill = "cyan"), show.legend = FALSE) + # scaling factor CHANGE EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan'), labels = c('oxygen')) +
+  scale_y_continuous(name = expression(NH[4]~or~NO[x]~"[µM]"),
+                     sec.axis = sec_axis(trans=~.*8, name=expression(O[2]~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/8)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C216_2_panel3 <- move_layers(C216_2_panel3, "GeomArea", position = "bottom") 
+
+
+
+# extract legend from plots, horizontally laid out 
+legend_1 <- get_legend(C216_2_panel1 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_2 <- get_legend(C216_2_panel2 + 
+                        guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_3 <- get_legend(C216_2_panel3 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+
+
+# set explicit panel size so they will be consistent for all figures. Function from egg package (need to do this after extracting legend)
+C216_2_panel1 <- set_panel_size(C216_2_panel1, width  = unit(3, "cm"), height = unit(6, "cm"))  
+C216_2_panel2 <- set_panel_size(C216_2_panel2, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C216_2_panel3 <- set_panel_size(C216_2_panel3, width  = unit(3, "cm"), height = unit(6, "cm")) 
+
+
+# cowplot- put together panels, without legends
+panels <- plot_grid(C216_2_panel1, C216_2_panel2, C216_2_panel3, labels = "AUTO", nrow = 1, hjust = -1.5, vjust = 4.5)
 panels
 
 # put together legends
@@ -635,13 +815,461 @@ leg123 <- plot_grid(legend_1, legend_2, legend_3, nrow = 1, align = "hv")
 leg123
 
 # combine plot and legend in 2 rows
-C212_3_plot <- plot_grid(panels, leg123, nrow = 2, rel_heights = c(1,.1))
-C212_3_plot
+C216_2_plot <- plot_grid(panels, leg123, nrow = 2, rel_heights = c(1,.1))
+# C216_2_plot
 
 
-save_plot("Figures/C212_3_plot.eps", C212_3_plot)
-  
+save_plot("Figures/C216_2_plot.eps", C216_2_plot, base_height = 4.5)
 ```
+
+
+
+
+#### CAR216_3
+NOTE: BAT profile was bad for this cruise. Leave out of final figure
+```{r}
+C216_3_panel1 <- ggplot() +
+#  geom_line(data = subset(C216_3, name %in% c("BAT")), aes(x = depth, y = value, color = "black"), size=1.5, na.rm = T) +
+  geom_area(data = subset(C216_3, name %in% c("oxygen")), aes(x = depth, y = value/300, fill = "cyan")) + # use scaling factor to put oxygen and BAT on same axis- WILL CHANGE FOR EVERY PANEL
+  geom_area(data = subset(C216_3, name %in% c("H2S")), aes(x = depth, y = value/300, fill = "red4")) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_colour_manual(name = '', values =c('black'='black', 'cyan'='cyan', 'red4'='red4'), labels = c('BAT', 'oxygen','H2S')) +
+  scale_y_continuous(name = expression(BAT~"["*m^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~.*300, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) +
+  scale_x_continuous(name = "depth [m]") +
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + # insead of limits, use coord_cartesian so the shading doesn't get cutoff
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/300)) + # use same scaling factor as for oxygen in geom_area above- WILL CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) # Put a small margin on L and R for later
+C216_3_panel1 <- move_layers(C216_3_panel1, "GeomArea", position = "bottom")  # move_layers from gginnards can shuffle geom layers in plot
+
+
+
+C216_3_panel2 <- ggplot() +
+  geom_line(data = subset(C216_3, name %in% c("Micro_Abund_DAPI")), aes(x = depth, y = value, color = "black"), size=1, lty = 2) +
+  geom_point(data = subset(C216_3, name %in% c("Micro_Abund_DAPI")), aes(x = depth, y = value, color = "black"), shape = 21, fill = "white", size = 3) +
+  geom_errorbar(data = subset(C216_3, name %in% c("Micro_Abund_DAPI")), aes(x = depth, y = value, ymin = as_vector(subset(C216_3, name %in% c("Micro_Abund_DAPI"))[,3] - subset(C216_3, name %in% c("Micro_Abund_DAPI_SD"))[,3]), ymax = as_vector(subset(C216_3, name %in% c("Micro_Abund_DAPI"))[,3] + subset(C216_3, name %in% c("Micro_Abund_DAPI_SD"))[,3]))) + # add in error bars on microscopy count data
+  geom_area(data = subset(C216_3, name %in% c("oxygen")), aes(x = depth, y = value/50, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C216_3, name %in% c("H2S")), aes(x = depth, y = value/50, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_colour_manual(name = '', values =c('black'='black'), labels = c('Microbial Abund')) +
+  scale_y_continuous(name = expression(Microbial~Abund~"["*x10^{8}~L^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~.*50, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/50)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank()) # turn off depth label for all panels after 1st to reduce redundancy
+C216_3_panel2 <- move_layers(C216_3_panel2, "GeomArea", position = "bottom") 
+
+
+C216_3_panel3 <- ggplot() +
+  geom_line(data = subset(C216_3, name %in% c("NO3","NO2_x10","NH4")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C216_3, name %in% c("NO3","NO2_x10","NH4")), aes(x = depth, y = value, color=name, shape = name), size = 3) +
+  scale_color_manual(name = ' ', values =c("red", "blue4", "goldenrod4"), labels = c('NH4','NO2 x10','NO3')) +
+  scale_shape_manual(name = ' ', values = c(15,18,17), labels = c('NH4','NO2 x10','NO3')) +
+  scale_linetype_manual(name = ' ', values = c("solid","dotted","dashed"), labels = c('NH4','NO2 x10','NO3')) +
+  geom_area(data = subset(C216_3, name %in% c("oxygen")), aes(x = depth, y = value/10, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C216_3, name %in% c("H2S")), aes(x = depth, y = value/10, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_y_continuous(name = "nutrients [µM]",
+                     sec.axis = sec_axis(trans=~.*10, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/10)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C216_3_panel3 <- move_layers(C216_3_panel3, "GeomArea", position = "bottom") 
+
+
+C216_3_panel4 <- ggplot() +
+  geom_line(data = subset(C216_3, name %in% c("CH4","PO4")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C216_3, name %in% c("CH4","PO4")), aes(x = depth, y = value, color=name, shape = name), size = 3) +
+  scale_color_manual(name = ' ', values =c("purple", "green4"), labels = c('CH4','PO4')) +
+  scale_shape_manual(name = ' ', values = c(16,4), labels = c('CH4','PO4')) +
+  scale_linetype_manual(name = ' ', values = c("twodash","dotted"), labels = c('CH4','PO4')) +
+  geom_area(data = subset(C216_3, name %in% c("oxygen")), aes(x = depth, y = value/20, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C216_3, name %in% c("H2S")), aes(x = depth, y = value/20, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_y_continuous(name = expression(CH[4]~or~PO[4]~"[µM]"),
+                     sec.axis = sec_axis(trans=~.*20, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/20)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C216_3_panel4 <- move_layers(C216_3_panel4, "GeomArea", position = "bottom") 
+
+
+C216_3_panel5 <- ggplot() +
+  geom_line(data = subset(C216_3, name %in% c("PartS0","TZVS")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C216_3, name %in% c("PartS0","TZVS")), aes(x = depth, y = value, color=name, shape = name), size = 3) +
+  geom_errorbar(data = subset(C216_3, name %in% c("PartS0")), aes(x = depth, y = value, ymin = as_vector(subset(C216_3, name %in% c("PartS0"))[,3] - subset(C216_3, name %in% c("PartS0_SD"))[,3]), ymax = as_vector(subset(C216_3, name %in% c("PartS0"))[,3] + subset(C216_3, name %in% c("PartS0_SD"))[,3]))) +
+  geom_errorbar(data = subset(C216_3, name %in% c("TZVS")), aes(x = depth, y = value, ymin = as_vector(subset(C216_3, name %in% c("TZVS"))[,3] - subset(C216_3, name %in% c("TZVS_SD"))[,3]), ymax = as_vector(subset(C216_3, name %in% c("TZVS"))[,3] + subset(C216_3, name %in% c("TZVS_SD"))[,3]))) + 
+  scale_color_manual(name = ' ', values =c("black", "yellow3"), labels = c('Part. S0','TZVS')) +
+  scale_shape_manual(name = ' ', values = c(2,17), labels = c('Part. S0','TZVS')) +
+  scale_linetype_manual(name = ' ', values = c("longdash","solid"), labels = c('Part. S0','TZVS')) +
+  geom_area(data = subset(C216_3, name %in% c("oxygen")), aes(x = depth, y = value/200, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C216_3, name %in% c("H2S")), aes(x = depth, y = value/200, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_y_continuous(name = expression("Part."~S^0~or~TZVS~"[µM]"),
+                     sec.axis = sec_axis(trans=~.*200, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/200)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C216_3_panel5 <- move_layers(C216_3_panel5, "GeomArea", position = "bottom") 
+
+
+C216_3_panel6 <- ggplot() +
+  geom_line(data = subset(C216_3, name %in% c("BNP","DCA")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C216_3, name %in% c("BNP","DCA")), aes(x = depth, y = value, color=name, shape = name), size = 3) +
+  geom_errorbar(data = subset(C216_3, name %in% c("BNP")), aes(x = depth, y = value, ymin = as_vector(subset(C216_3, name %in% c("BNP"))[,3] - subset(C216_3, name %in% c("BNP_SD"))[,3]), ymax = as_vector(subset(C216_3, name %in% c("BNP"))[,3] + subset(C216_3, name %in% c("BNP_SD"))[,3]))) + 
+  geom_errorbar(data = subset(C216_3, name %in% c("BNP")), aes(x = depth, y = value, ymin = as_vector(subset(C216_3, name %in% c("BNP"))[,3] - subset(C216_3, name %in% c("BNP_SD"))[,3]), ymax = as_vector(subset(C216_3, name %in% c("BNP"))[,3] + subset(C216_3, name %in% c("BNP_SD"))[,3]))) + 
+  geom_errorbar(data = subset(C216_3, name %in% c("DCA")), aes(x = depth, y = value, ymin = as_vector(subset(C216_3, name %in% c("DCA"))[,3] - subset(C216_3, name %in% c("DCA_SD"))[,3]), ymax = as_vector(subset(C216_3, name %in% c("DCA"))[,3] + subset(C216_3, name %in% c("DCA_SD"))[,3]))) + 
+  scale_color_manual(name = ' ', values =c("darkorange3", "springgreen4"), labels = c('BNP','DCA')) +
+  scale_shape_manual(name = ' ', values = c(16,15), labels = c('BNP','DCA')) +
+  scale_linetype_manual(name = ' ', values = c("dotted","solid"), labels = c('BNP','DCA')) +
+  geom_area(data = subset(C216_3, name %in% c("oxygen")), aes(x = depth, y = value/15, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C216_3, name %in% c("H2S")), aes(x = depth, y = value/15, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_y_continuous(name = expression(BNP~or~DCA~"[µg"~L^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~.*15, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/15)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C216_3_panel6 <- move_layers(C216_3_panel6, "GeomArea", position = "bottom") 
+
+
+
+C216_3_panel7 <- ggplot() +
+  geom_line(data = subset(C216_3, name %in% c("SRR")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C216_3, name %in% c("SRR")), aes(x = depth, y = value, color=name, shape = name), size = 5) +
+  geom_errorbar(data = subset(C216_3, name %in% c("SRR")), aes(x = depth, y = value, ymin = as_vector(subset(C216_3, name %in% c("SRR"))[,3] - subset(C216_3, name %in% c("SRR_SD"))[,3]), ymax = as_vector(subset(C216_3, name %in% c("SRR"))[,3] + subset(C216_3, name %in% c("SRR_SD"))[,3]))) + 
+  scale_color_manual(name = ' ', values =c("blue"), labels = c('SRR')) +
+  scale_shape_manual(name = ' ', values = c(18), labels = c('SRR')) +
+  scale_linetype_manual(name = ' ', values = c("solid"), labels = c('SRR')) +
+  geom_area(data = subset(C216_3, name %in% c("oxygen")), aes(x = depth, y = value*10, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C216_3, name %in% c("H2S")), aes(x = depth, y = value*10, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_y_continuous(name = expression(SRR~"[pmol"~L^{-1}~d^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~./10, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150*10)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C216_3_panel7 <- move_layers(C216_3_panel7, "GeomArea", position = "bottom") 
+
+
+
+# extract legend from plots, horizontally laid out 
+legend_1 <- get_legend(C216_3_panel1 + 
+                         guides(color = guide_legend(nrow = 2)) + # for some reason this is not putting in 2 rows. Come back later
+                         theme(legend.position = "bottom"))
+legend_2 <- get_legend(C216_3_panel2 + 
+                        guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_3 <- get_legend(C216_3_panel3 + 
+                         guides(color = guide_legend(nrow = 2)) + # this one is working
+                         theme(legend.position = "bottom"))
+legend_4 <- get_legend(C216_3_panel4 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_5 <- get_legend(C216_3_panel5 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_6 <- get_legend(C216_3_panel6 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_7 <- get_legend(C216_3_panel7 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+
+
+# set explicit panel size so they will be consistent for all figures. Function from egg package (need to do this after extracting legend)
+C216_3_panel1 <- set_panel_size(C216_3_panel1, width  = unit(3, "cm"), height = unit(6, "cm"))  
+C216_3_panel2 <- set_panel_size(C216_3_panel2, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C216_3_panel3 <- set_panel_size(C216_3_panel3, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C216_3_panel4 <- set_panel_size(C216_3_panel4, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C216_3_panel5 <- set_panel_size(C216_3_panel5, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C216_3_panel6 <- set_panel_size(C216_3_panel6, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C216_3_panel7 <- set_panel_size(C216_3_panel7, width  = unit(3, "cm"), height = unit(6, "cm")) 
+
+
+# cowplot- put together panels, without legends ##  leave out panel 1! BAT data bad (but grab legend for O2/H2S colors)
+panels <- plot_grid(C216_3_panel2, C216_3_panel3, C216_3_panel4, C216_3_panel5, C216_3_panel6, C216_3_panel7, labels = "AUTO", nrow = 1, hjust = -1.5, vjust = 4.5)
+panels 
+
+# put together legends
+leg1234567 <- plot_grid(legend_1, legend_2, legend_3, legend_4, legend_5, legend_6, legend_7, nrow = 1, align = "hv")
+leg1234567
+
+# combine plot and legend in 2 rows
+C216_3_plot <- plot_grid(panels, leg1234567, nrow = 2, rel_heights = c(1,.1))
+#C216_3_plot
+
+
+save_plot("Figures/C216_3_plot.eps", C216_3_plot, base_height = 4.5, base_width = 12)
+
+```
+
+
+
+
+
+#### CAR224
+
+```{r}
+C224_panel1 <- ggplot() +
+  geom_line(data = subset(C224, name %in% c("BAT")), aes(x = depth, y = value, color = "black"), size=1.5, na.rm = T) +
+  geom_area(data = subset(C224, name %in% c("oxygen")), aes(x = depth, y = value/750, fill = "cyan")) + # use scaling factor to put oxygen and BAT on same axis- WILL CHANGE FOR EVERY PANEL
+  geom_area(data = subset(C224, name %in% c("H2S")), aes(x = depth, y = value/750, fill = "red4")) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_colour_manual(name = '', values =c('black'='black', 'cyan'='cyan', 'red4'='red4'), labels = c('BAT', 'oxygen','H2S')) +
+  scale_y_continuous(name = expression(BAT~"["*m^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~.*750, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) +
+  scale_x_continuous(name = "depth [m]") +
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + # insead of limits, use coord_cartesian so the shading doesn't get cutoff
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/750)) + # use same scaling factor as for oxygen in geom_area above- WILL CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) # Put a small margin on L and R for later
+C224_panel1 <- move_layers(C224_panel1, "GeomArea", position = "bottom")  # move_layers from gginnards can shuffle geom layers in plot
+
+
+C224_panel2 <- ggplot() +
+  geom_line(data = subset(C224, name %in% c("Micro_Abund_AO")), aes(x = depth, y = value, color = "black"), size=1, lty = 2) +
+  geom_point(data = subset(C224, name %in% c("Micro_Abund_AO")), aes(x = depth, y = value, color = "black"), shape = 21, fill = "white", size = 3) +
+  geom_errorbar(data = subset(C224, name %in% c("Micro_Abund_AO")), aes(x = depth, y = value, ymin = as_vector(subset(C224, name %in% c("Micro_Abund_AO"))[,3] - subset(C224, name %in% c("Micro_Abund_AO_SD"))[,3]), ymax = as_vector(subset(C224, name %in% c("Micro_Abund_AO"))[,3] + subset(C224, name %in% c("Micro_Abund_AO_SD"))[,3]))) + # add in error bars on microscopy count data
+  geom_area(data = subset(C224, name %in% c("oxygen")), aes(x = depth, y = value/50, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C224, name %in% c("H2S")), aes(x = depth, y = value/50, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_colour_manual(name = '', values =c('black'='black'), labels = c('Microbial Abund')) +
+  scale_y_continuous(name = expression(Microbial~Abund~"["*x10^{8}~L^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~.*50, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/50)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank()) # turn off depth label for all panels after 1st to reduce redundancy
+C224_panel2 <- move_layers(C224_panel2, "GeomArea", position = "bottom") 
+
+
+C224_panel3 <- ggplot() +
+  geom_line(data = subset(C224, name %in% c("NO3","NO2_x10","NH4")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C224, name %in% c("NO3","NO2_x10","NH4")), aes(x = depth, y = value, color=name, shape = name), size = 3) +
+  scale_color_manual(name = ' ', values =c("red", "blue4", "goldenrod4"), labels = c('NH4','NO2 x10','NO3')) +
+  scale_shape_manual(name = ' ', values = c(15,18,17), labels = c('NH4','NO2 x10','NO3')) +
+  scale_linetype_manual(name = ' ', values = c("solid","dotted","dashed"), labels = c('NH4','NO2 x10','NO3')) +
+  geom_area(data = subset(C224, name %in% c("oxygen")), aes(x = depth, y = value/10, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C224, name %in% c("H2S")), aes(x = depth, y = value/10, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_y_continuous(name = "nutrients [µM]",
+                     sec.axis = sec_axis(trans=~.*10, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/10)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C224_panel3 <- move_layers(C224_panel3, "GeomArea", position = "bottom") 
+
+
+C224_panel4 <- ggplot() +
+  geom_line(data = subset(C224, name %in% c("CH4","PO4")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C224, name %in% c("CH4","PO4")), aes(x = depth, y = value, color=name, shape = name), size = 3) +
+  scale_color_manual(name = ' ', values =c("purple", "green4"), labels = c('CH4','PO4')) +
+  scale_shape_manual(name = ' ', values = c(16,4), labels = c('CH4','PO4')) +
+  scale_linetype_manual(name = ' ', values = c("twodash","dotted"), labels = c('CH4','PO4')) +
+  geom_area(data = subset(C224, name %in% c("oxygen")), aes(x = depth, y = value/20, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C224, name %in% c("H2S")), aes(x = depth, y = value/20, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_y_continuous(name = expression(CH[4]~or~PO[4]~"[µM]"),
+                     sec.axis = sec_axis(trans=~.*20, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/20)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C224_panel4 <- move_layers(C224_panel4, "GeomArea", position = "bottom") 
+
+
+C224_panel5 <- ggplot() +
+  geom_line(data = subset(C224, name %in% c("PartS0")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C224, name %in% c("PartS0")), aes(x = depth, y = value, color=name, shape = name), size = 3) +
+  geom_errorbar(data = subset(C224, name %in% c("PartS0")), aes(x = depth, y = value, ymin = as_vector(subset(C224, name %in% c("PartS0"))[,3] - subset(C224, name %in% c("PartS0_SD"))[,3]), ymax = as_vector(subset(C224, name %in% c("PartS0"))[,3] + subset(C224, name %in% c("PartS0_SD"))[,3]))) +
+  scale_color_manual(name = ' ', values =c("black"), labels = c('Part. S0')) +
+  scale_shape_manual(name = ' ', values = c(2), labels = c('Part. S0')) +
+  scale_linetype_manual(name = ' ', values = c("longdash"), labels = c('Part. S0')) +
+  geom_area(data = subset(C224, name %in% c("oxygen")), aes(x = depth, y = value/100, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C224, name %in% c("H2S")), aes(x = depth, y = value/100, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_y_continuous(name = expression("Part."~S^0~"[µM]"),
+                     sec.axis = sec_axis(trans=~.*100, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/100)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C224_panel5 <- move_layers(C224_panel5, "GeomArea", position = "bottom") 
+
+
+C224_panel6 <- ggplot() +
+  geom_line(data = subset(C224, name %in% c("BNP","DCA")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C224, name %in% c("BNP","DCA")), aes(x = depth, y = value, color=name, shape = name), size = 3) +
+  geom_errorbar(data = subset(C224, name %in% c("BNP")), aes(x = depth, y = value, ymin = as_vector(subset(C224, name %in% c("BNP"))[,3] - subset(C224, name %in% c("BNP_SD"))[,3]), ymax = as_vector(subset(C224, name %in% c("BNP"))[,3] + subset(C224, name %in% c("BNP_SD"))[,3]))) + 
+  geom_errorbar(data = subset(C224, name %in% c("BNP")), aes(x = depth, y = value, ymin = as_vector(subset(C224, name %in% c("BNP"))[,3] - subset(C224, name %in% c("BNP_SD"))[,3]), ymax = as_vector(subset(C224, name %in% c("BNP"))[,3] + subset(C224, name %in% c("BNP_SD"))[,3]))) + 
+  geom_errorbar(data = subset(C224, name %in% c("DCA")), aes(x = depth, y = value, ymin = as_vector(subset(C224, name %in% c("DCA"))[,3] - subset(C224, name %in% c("DCA_SD"))[,3]), ymax = as_vector(subset(C224, name %in% c("DCA"))[,3] + subset(C224, name %in% c("DCA_SD"))[,3]))) + 
+  scale_color_manual(name = ' ', values =c("darkorange3", "springgreen4"), labels = c('BNP','DCA')) +
+  scale_shape_manual(name = ' ', values = c(16,15), labels = c('BNP','DCA')) +
+  scale_linetype_manual(name = ' ', values = c("dotted","solid"), labels = c('BNP','DCA')) +
+  geom_area(data = subset(C224, name %in% c("oxygen")), aes(x = depth, y = value/3.7, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C224, name %in% c("H2S")), aes(x = depth, y = value/3.7, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_y_continuous(name = expression(BNP~or~DCA~"[µg"~L^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~.*3.7, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/3.7)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C224_panel6 <- move_layers(C224_panel6, "GeomArea", position = "bottom") 
+
+
+
+C224_panel7 <- ggplot() +
+  geom_line(data = subset(C224, name %in% c("SRR")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C224, name %in% c("SRR")), aes(x = depth, y = value, color=name, shape = name), size = 5) +
+  geom_errorbar(data = subset(C224, name %in% c("SRR")), aes(x = depth, y = value, ymin = as_vector(subset(C224, name %in% c("SRR"))[,3] - subset(C224, name %in% c("SRR_SD"))[,3]), ymax = as_vector(subset(C224, name %in% c("SRR"))[,3] + subset(C224, name %in% c("SRR_SD"))[,3]))) + 
+  scale_color_manual(name = ' ', values =c("blue"), labels = c('SRR')) +
+  scale_shape_manual(name = ' ', values = c(18), labels = c('SRR')) +
+  scale_linetype_manual(name = ' ', values = c("solid"), labels = c('SRR')) +
+  geom_area(data = subset(C224, name %in% c("oxygen")), aes(x = depth, y = value*5, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C224, name %in% c("H2S")), aes(x = depth, y = value*5, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_y_continuous(name = expression(SRR~"[pmol"~L^{-1}~d^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~./5, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150*5)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C224_panel7 <- move_layers(C224_panel7, "GeomArea", position = "bottom") 
+
+
+
+C224_panel8 <- ggplot() +
+  geom_line(data = subset(C224, name %in% c("Cells_S0_inclusions")), aes(x = depth, y = value, color=name, linetype = name), size=1) +
+  geom_point(data = subset(C224, name %in% c("Cells_S0_inclusions")), aes(x = depth, y = value, color=name, shape = name), size = 5) +
+  geom_errorbar(data = subset(C224, name %in% c("Cells_S0_inclusions")), aes(x = depth, y = value, ymin = as_vector(subset(C224, name %in% c("Cells_S0_inclusions"))[,3] - subset(C224, name %in% c("Cells_S0_inclusions_SD"))[,3]), ymax = as_vector(subset(C224, name %in% c("Cells_S0_inclusions"))[,3] + subset(C224, name %in% c("Cells_S0_inclusions_SD"))[,3]))) + 
+  scale_color_manual(name = ' ', values =c("deeppink2"), labels = c('Cell Abund')) +
+  scale_shape_manual(name = ' ', values = c(18), labels = c('Cell Abund')) +
+  scale_linetype_manual(name = ' ', values = c("solid"), labels = c('Cell Abund')) +
+  geom_area(data = subset(C224, name %in% c("oxygen")), aes(x = depth, y = value/85, fill = "cyan"), show.legend = FALSE) + # turn legend off for oxygen so it doesn't repeat when panels are together  # scaling factor CHANGE EVERY PANEL
+  geom_area(data = subset(C224, name %in% c("H2S")), aes(x = depth, y = value/85, fill = "red4"), show.legend = FALSE) + # use same scaling factor as for oxyen-CHANGE FOR EVERY PANEL
+  scale_fill_manual(name = '', values = c('cyan'='cyan', 'red4'='red4'), labels = c('O2','H2S')) +
+  scale_y_continuous(name = expression(Cells~with~S^0~"["*x10^{6}~L^{-1}*"]"),
+                     sec.axis = sec_axis(trans=~.*85, name=expression(O[2]~or~H[2]*"S"~"[µM]")), expand = c(0, 0)) + # reciprocal of scaling factor CHANGE EVERY PANEL
+  scale_x_reverse(expand = c(0, 0)) +
+  coord_cartesian() + 
+  coord_flip(xlim = c(400, 100), ylim = c(0, 150/85)) + # scaling factor CHANGE EVERY PANEL
+  theme_bw() +
+  theme(legend.position = "none") +
+  theme(plot.margin = margin(0, 10, 0, 10)) +
+  theme(axis.text.y=element_blank(), axis.title.y=element_blank())
+C224_panel8 <- move_layers(C224_panel8, "GeomArea", position = "bottom") 
+
+
+
+# extract legend from plots, horizontally laid out 
+legend_1 <- get_legend(C224_panel1 + 
+                         guides(color = guide_legend(nrow = 2)) + # for some reason this is not putting in 2 rows. Come back later
+                         theme(legend.position = "bottom"))
+legend_2 <- get_legend(C224_panel2 + 
+                        guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_3 <- get_legend(C224_panel3 + 
+                         guides(color = guide_legend(nrow = 2)) + # this one is working
+                         theme(legend.position = "bottom"))
+legend_4 <- get_legend(C224_panel4 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_5 <- get_legend(C224_panel5 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_6 <- get_legend(C224_panel6 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_7 <- get_legend(C224_panel7 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+legend_8 <- get_legend(C224_panel8 + 
+                         guides(color = guide_legend(nrow = 1)) +
+                         theme(legend.position = "bottom"))
+
+
+# set explicit panel size so they will be consistent for all figures. Function from egg package (need to do this after extracting legend)
+C224_panel1 <- set_panel_size(C224_panel1, width  = unit(3, "cm"), height = unit(6, "cm"))  
+C224_panel2 <- set_panel_size(C224_panel2, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C224_panel3 <- set_panel_size(C224_panel3, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C224_panel4 <- set_panel_size(C224_panel4, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C224_panel5 <- set_panel_size(C224_panel5, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C224_panel6 <- set_panel_size(C224_panel6, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C224_panel7 <- set_panel_size(C224_panel7, width  = unit(3, "cm"), height = unit(6, "cm")) 
+C224_panel8 <- set_panel_size(C224_panel8, width  = unit(3, "cm"), height = unit(6, "cm")) 
+
+
+# cowplot- put together panels, without legends ##  leave out panel 1! BAT data bad (but grab legend for O2/H2S colors)
+panels <- plot_grid(C224_panel1, C224_panel2, C224_panel3, C224_panel4, C224_panel5, C224_panel6, C224_panel7, C224_panel8, labels = "AUTO", nrow = 1, hjust = -1.5, vjust = 4.5)
+panels 
+
+# put together legends
+leg12345678 <- plot_grid(legend_1, legend_2, legend_3, legend_4, legend_5, legend_6, legend_7, legend_8, nrow = 1, align = "hv")
+leg12345678
+
+# combine plot and legend in 2 rows
+C224_plot <- plot_grid(panels, leg12345678, nrow = 2, rel_heights = c(1,.1))
+#C224_plot
+
+
+save_plot("Figures/C224_plot.eps", C224_plot, base_height = 4.5, base_width = 15)
+```
+
+
+
+
+
+
 
 
 
